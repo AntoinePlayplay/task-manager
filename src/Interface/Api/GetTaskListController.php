@@ -17,10 +17,10 @@ class GetTaskListController extends AbstractController
     #[Route("/", name: "task_list")]
     public function __invoke(): Response
     {
-        $taskList = $this->getTaskListQueryHandler->handle();
+        $tasks = $this->getTaskListQueryHandler->handle();
         return $this->render('task/index.html.twig', [
             'controller_name' => 'GetTaskListController',
-            'taskList' => $taskList,
+            'tasks' => $tasks,
         ]);
     }
 }
