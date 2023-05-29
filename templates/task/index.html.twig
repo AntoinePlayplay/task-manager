@@ -7,6 +7,6 @@
 </ul>
 <br/>
 {% for task in tasks %}
-    {% include 'task/task_detail.html.twig' with {'task': task} %}
+    {% include 'task/partials/task_detail.html.twig' with {'task': task} %}
 {% endfor %}
 {% endblock %}
