@@ -27,7 +27,7 @@ Run the project with Docker (worker mode):
 docker run \
     -e FRANKENPHP_CONFIG="worker ./public/index.php" \
     -v $PWD:/app \
-    -p 80:80 -p 443:443 \
+    -p 8089:80 \
     dunglas/frankenphp
 ```
 

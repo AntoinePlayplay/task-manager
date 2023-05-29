@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping>
+    <entity name="App\Domain\Model\Task" repository-class="App\Infrastructure\Repository\DoctrineTaskRepository" table="tasks">
+        <id name="uuid" type="string" length="36" column="uuid"/>
+        <field name="name" type="string"/>
+        <field name="description" type="string"/>
+        <field name="completed" type="boolean" default="false"/>
+        <field name="createdAt" type="datetime" column="created_at"/>
+        <field name="updatedAt" type="datetime" nullable="true" column="updated_at"/>
+        <field name="completedAt" type="datetime" nullable="true" column="completed_at"/>
+    </entity>
+</doctrine-mapping>
