@@ -6,7 +6,8 @@ namespace App\Domain\Model;
 
 class Task
 {
-    private string $uuid;
+    private int $id;
+    private UUID $uuid;
     private string $name;
     private string $description;
     private bool $completed;
@@ -14,9 +15,15 @@ class Task
     private ?\DateTime $updatedAt;
     private ?\DateTime $completedAt;
 
-    public function getUUID(): TaskUUID
+
+    public function getId(): int
     {
-        return TaskUUID::fromString($this->uuid);
+        return $this->id;
+    }
+
+    public function getUUID(): UUID
+    {
+        return $this->uuid;
     }
 
     public function getName(): string
@@ -49,9 +56,9 @@ class Task
         return $this->completedAt;
     }
 
-    public function create(string $name, string $description): self
+    public function create(UUID $uuid, string $name, string $description): self
     {
-        $this->uuid = (new TaskUUID())->toString();
+        $this->uuid = $uuid;
         $this->name = $name;
         $this->description = $description;
         $this->completed = false;
@@ -69,7 +76,7 @@ class Task
         return $this;
     }
 
-    public function completed(): self
+    public function complete(): self
     {
         $this->completed = true;
         $this->updatedAt = new \DateTime();

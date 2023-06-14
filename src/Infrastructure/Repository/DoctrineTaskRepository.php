@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Infrastructure\Repository;
 
 use App\Domain\Model\Task;
-use App\Domain\Model\TaskUUID;
+use App\Domain\Model\UUID;
 use App\Domain\Repository\TaskRepository;
+use App\Infrastructure\Type\UuidType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -30,13 +31,13 @@ final class DoctrineTaskRepository implements TaskRepository
      * @throws NonUniqueResultException
      * @throws NoResultException
      */
-    public function get(TaskUUID $uuid): Task
+    public function get(UUID $uuid): Task
     {
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('t')
             ->from(Task::class, 't')
             ->where('t.uuid = :uuid')
-            ->setParameter('uuid', $uuid->toString());
+            ->setParameter('uuid', $uuid, UuidType::NAME);
         return $qb->getQuery()->getSingleResult();
     }
 
@@ -56,7 +57,7 @@ final class DoctrineTaskRepository implements TaskRepository
         $this->entityManager->flush();
     }
 
-    public function delete(TaskUUID $uuid): void
+    public function delete(UUID $uuid): void
     {
         $task = $this->get($uuid);
         $this->entityManager->remove($task);

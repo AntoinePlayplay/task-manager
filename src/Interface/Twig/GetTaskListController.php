@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Interface\Api;
+namespace App\Interface\Twig;
 
 use App\UseCase\QueryHandler\GetTaskListQueryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,10 +13,13 @@ class GetTaskListController extends AbstractController
     {
     }
 
-    #[Route("/api/", name: "task_list")]
-    public function __invoke(): JsonResponse
+    #[Route("/app", name: "app_task_list")]
+    public function __invoke(): Response
     {
         $tasks = $this->getTaskListQueryHandler->handle();
-        return $this->json($tasks, Response::HTTP_OK);
+        return $this->render('task/index.html.twig', [
+            'controller_name' => 'GetTaskListController',
+            'tasks' => $tasks,
+        ]);
     }
 }

@@ -6,9 +6,9 @@ namespace App\UseCase\QueryHandler;
 
 use App\Domain\Repository\TaskRepository;
 
-final class GetTaskListQueryHandler
+final readonly class GetTaskListQueryHandler
 {
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private TaskRepository $taskRepository)
     {
     }
 
