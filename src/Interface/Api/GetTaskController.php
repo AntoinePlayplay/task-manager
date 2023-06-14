@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class GetTaskController extends AbstractController
@@ -21,7 +22,10 @@ final class GetTaskController extends AbstractController
     {
         $taskQuery = new GetTaskQuery(new UUID($uuid));
         $task = $this->queryBus->dispatch($taskQuery);
+        /** @var HandledStamp $handled */
+        $handled = $task->last(HandledStamp::class);
+        $taskResult = $handled->getResult();
 
-        return $this->json($task, Response::HTTP_OK);
+        return $this->json($taskResult, Response::HTTP_OK);
     }
 }
