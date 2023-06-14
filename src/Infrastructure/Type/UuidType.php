@@ -14,6 +14,20 @@ final class UuidType extends GuidType
 {
     public const NAME = 'uuid';
 
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
+    {
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if ($value instanceof UUID) {
+            return $value->getUuid();
+        }
+
+        throw ConversionException::conversionFailed($value, self::NAME);
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -38,18 +52,12 @@ final class UuidType extends GuidType
         return $uuid;
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
+    /**
+     * @return string[]
+     */
+    public function getMappedDatabaseTypes(AbstractPlatform $platform): array
     {
-
-        if ($value === null || $value === '') {
-            return null;
-        }
-
-        if ($value instanceof UUID) {
-            return $value->getUuid();
-        }
-
-        throw ConversionException::conversionFailed($value, self::NAME);
+        return [self::NAME];
     }
 
     public function getName(): string
@@ -60,13 +68,5 @@ final class UuidType extends GuidType
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getMappedDatabaseTypes(AbstractPlatform $platform): array
-    {
-        return [self::NAME];
     }
 }

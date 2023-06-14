@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Model;
 
-final class UUID
+final readonly class UUID
 {
     public function __construct(private string $uuid)
     {

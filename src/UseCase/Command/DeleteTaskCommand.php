@@ -6,10 +6,10 @@ namespace App\UseCase\Command;
 
 use App\Domain\Model\UUID;
 
-final class DeleteTaskCommand
+final readonly class DeleteTaskCommand
 {
     public function __construct(
-        public readonly UUID $uuid,
+        public UUID $uuid,
     ) {
     }
 }

@@ -9,12 +9,16 @@ use App\Domain\Model\UUID;
 
 interface TaskRepository
 {
+    public function create(Task $task): void;
+
+    public function delete(UUID $uuid): void;
+
+    public function get(UUID $uuid): Task;
+
     /**
      * @return Task[]
      */
     public function list(): array;
-    public function get(UUID $uuid): Task;
-    public function create(Task $task): void;
+
     public function update(Task $task): void;
-    public function delete(UUID $uuid): void;
 }

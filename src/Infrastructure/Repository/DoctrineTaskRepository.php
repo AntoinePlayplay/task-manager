@@ -12,19 +12,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
-final class DoctrineTaskRepository implements TaskRepository
+final readonly class DoctrineTaskRepository implements TaskRepository
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    public function list(): array
+    public function create(Task $task): void
     {
-        $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('t')
-            ->from(Task::class, 't')
-            ->orderBy('t.createdAt', 'DESC');
-        return $qb->getQuery()->getResult();
+        $this->save($task);
+    }
+
+    public function delete(UUID $uuid): void
+    {
+        $task = $this->get($uuid);
+        $this->entityManager->remove($task);
+        $this->entityManager->flush();
     }
 
     /**
@@ -38,17 +41,18 @@ final class DoctrineTaskRepository implements TaskRepository
             ->from(Task::class, 't')
             ->where('t.uuid = :uuid')
             ->setParameter('uuid', $uuid, UuidType::NAME);
+
         return $qb->getQuery()->getSingleResult();
     }
 
-    public function create(Task $task): void
+    public function list(): array
     {
-        $this->save($task);
-    }
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('t')
+            ->from(Task::class, 't')
+            ->orderBy('t.createdAt', 'DESC');
 
-    public function update(Task $task): void
-    {
-        $this->save($task);
+        return $qb->getQuery()->getResult();
     }
 
     public function save(Task $entity): void
@@ -57,10 +61,8 @@ final class DoctrineTaskRepository implements TaskRepository
         $this->entityManager->flush();
     }
 
-    public function delete(UUID $uuid): void
+    public function update(Task $task): void
     {
-        $task = $this->get($uuid);
-        $this->entityManager->remove($task);
-        $this->entityManager->flush();
+        $this->save($task);
     }
 }

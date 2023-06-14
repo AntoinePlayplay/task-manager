@@ -4,15 +4,15 @@ namespace App\Interface\Api;
 
 use App\Domain\Model\UUID;
 use App\UseCase\Command\ToDoTaskCommand;
-use App\UseCase\CommandHandler\ToDoTaskCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ToDoTaskController extends AbstractController
+final class ToDoTaskController extends AbstractController
 {
-    public function __construct(private readonly ToDoTaskCommandHandler $toDoTaskCommandHandler)
+    public function __construct(private readonly MessageBusInterface $commandBus)
     {
     }
 
@@ -20,7 +20,8 @@ class ToDoTaskController extends AbstractController
     public function __invoke(string $uuid): JsonResponse
     {
         $toDoTaskCommand = new ToDoTaskCommand(new UUID($uuid));
-        $this->toDoTaskCommandHandler->handle($toDoTaskCommand);
+        $this->commandBus->dispatch($toDoTaskCommand);
+
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }

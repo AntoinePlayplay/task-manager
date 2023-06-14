@@ -7,13 +7,13 @@ namespace App\UseCase\CommandHandler;
 use App\Domain\Repository\TaskRepository;
 use App\UseCase\Command\ToDoTaskCommand;
 
-final class ToDoTaskCommandHandler
+final readonly class ToDoTaskCommandHandler implements CommandHandlerInterface
 {
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private TaskRepository $taskRepository)
     {
     }
 
-    public function handle(ToDoTaskCommand $toDoTaskCommand): void
+    public function __invoke(ToDoTaskCommand $toDoTaskCommand): void
     {
         $task = $this->taskRepository->get($toDoTaskCommand->uuid);
         $task = $task->toDo();

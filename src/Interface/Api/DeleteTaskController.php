@@ -4,15 +4,15 @@ namespace App\Interface\Api;
 
 use App\Domain\Model\UUID;
 use App\UseCase\Command\DeleteTaskCommand;
-use App\UseCase\CommandHandler\DeleteTaskCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeleteTaskController extends AbstractController
+final class DeleteTaskController extends AbstractController
 {
-    public function __construct(private readonly DeleteTaskCommandHandler $deleteTaskCommandHandler)
+    public function __construct(private readonly MessageBusInterface $commandBus)
     {
     }
 
@@ -20,7 +20,8 @@ class DeleteTaskController extends AbstractController
     public function __invoke(string $uuid): JsonResponse
     {
         $deleteTaskCommand = new DeleteTaskCommand(new UUID($uuid));
-        $this->deleteTaskCommandHandler->handle($deleteTaskCommand);
+        $this->commandBus->dispatch($deleteTaskCommand);
+
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }

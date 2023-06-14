@@ -8,13 +8,13 @@ use App\Domain\Model\Task;
 use App\Domain\Repository\TaskRepository;
 use App\UseCase\Query\GetTaskQuery;
 
-final class GetTaskQueryHandler
+final readonly class GetTaskQueryHandler implements QueryHandlerInterface
 {
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private TaskRepository $taskRepository)
     {
     }
 
-    public function handle(GetTaskQuery $getTaskQuery): Task
+    public function __invoke(GetTaskQuery $getTaskQuery): Task
     {
         return $this->taskRepository->get($getTaskQuery->uuid);
     }

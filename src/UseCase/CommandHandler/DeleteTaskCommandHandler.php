@@ -7,13 +7,13 @@ namespace App\UseCase\CommandHandler;
 use App\Domain\Repository\TaskRepository;
 use App\UseCase\Command\DeleteTaskCommand;
 
-final class DeleteTaskCommandHandler
+final readonly class DeleteTaskCommandHandler implements CommandHandlerInterface
 {
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private TaskRepository $taskRepository)
     {
     }
 
-    public function handle(DeleteTaskCommand $deleteTaskCommand): void
+    public function __invoke(DeleteTaskCommand $deleteTaskCommand): void
     {
         $this->taskRepository->delete($deleteTaskCommand->uuid);
     }

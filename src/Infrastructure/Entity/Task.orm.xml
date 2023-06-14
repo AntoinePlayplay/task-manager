@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping>
-    <entity name="App\Domain\Model\Task" repository-class="App\Infrastructure\Repository\DoctrineTaskRepository" table="tasks">
+    <entity name="App\Domain\Model\Task" repository-class="App\Infrastructure\Repository\DoctrineTaskRepository"
+            table="tasks">
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>

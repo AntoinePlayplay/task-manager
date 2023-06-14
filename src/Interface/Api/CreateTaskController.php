@@ -5,17 +5,17 @@ namespace App\Interface\Api;
 use App\Domain\Model\UUID;
 use App\Interface\Dto\CreateTaskDto;
 use App\UseCase\Command\CreateTaskCommand;
-use App\UseCase\CommandHandler\CreateTaskCommandHandler;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateTaskController extends AbstractController
+final class CreateTaskController extends AbstractController
 {
-    public function __construct(private readonly CreateTaskCommandHandler $createTaskCommandHandler)
+    public function __construct(private readonly MessageBusInterface $commandBus)
     {
     }
 
@@ -28,7 +28,8 @@ class CreateTaskController extends AbstractController
             name: $createTaskDto->name,
             description: $createTaskDto->description,
         );
-        $this->createTaskCommandHandler->handle($newTask);
+        $this->commandBus->dispatch($newTask);
+
         return $this->json($uuid, Response::HTTP_CREATED);
     }
 }

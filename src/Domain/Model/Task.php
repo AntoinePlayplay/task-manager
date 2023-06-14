@@ -4,31 +4,34 @@ declare(strict_types=1);
 
 namespace App\Domain\Model;
 
+use DateTime;
+
 class Task
 {
     private int $id;
+
     private UUID $uuid;
+
     private string $name;
+
     private string $description;
+
     private bool $completed;
-    private \DateTime $createdAt;
-    private ?\DateTime $updatedAt;
-    private ?\DateTime $completedAt;
 
+    private DateTime $createdAt;
 
-    public function getId(): int
+    private ?DateTime $updatedAt;
+
+    private ?DateTime $completedAt;
+
+    public function getCompletedAt(): ?DateTime
     {
-        return $this->id;
+        return $this->completedAt;
     }
 
-    public function getUUID(): UUID
+    public function getCreatedAt(): DateTime
     {
-        return $this->uuid;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
+        return $this->createdAt;
     }
 
     public function getDescription(): string
@@ -36,24 +39,38 @@ class Task
         return $this->description;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getUUID(): UUID
+    {
+        return $this->uuid;
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
     public function isCompleted(): bool
     {
         return $this->completed;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function complete(): self
     {
-        return $this->createdAt;
-    }
+        $this->completed = true;
+        $this->updatedAt = new DateTime();
+        $this->completedAt = new DateTime();
 
-    public function getUpdatedAt(): ?\DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function getCompletedAt(): ?\DateTime
-    {
-        return $this->completedAt;
+        return $this;
     }
 
     public function create(UUID $uuid, string $name, string $description): self
@@ -62,7 +79,16 @@ class Task
         $this->name = $name;
         $this->description = $description;
         $this->completed = false;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTime();
+
+        return $this;
+    }
+
+    public function toDo(): self
+    {
+        $this->completed = false;
+        $this->updatedAt = new DateTime();
+        $this->completedAt = null;
 
         return $this;
     }
@@ -71,25 +97,7 @@ class Task
     {
         $this->name = $name;
         $this->description = $description;
-        $this->updatedAt = new \DateTime();
-
-        return $this;
-    }
-
-    public function complete(): self
-    {
-        $this->completed = true;
-        $this->updatedAt = new \DateTime();
-        $this->completedAt = new \DateTime();
-
-        return $this;
-    }
-
-    public function toDo(): self
-    {
-        $this->completed = false;
-        $this->updatedAt = new \DateTime();
-        $this->completedAt = null;
+        $this->updatedAt = new DateTime();
 
         return $this;
     }

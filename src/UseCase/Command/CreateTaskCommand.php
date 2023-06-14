@@ -6,12 +6,12 @@ namespace App\UseCase\Command;
 
 use App\Domain\Model\UUID;
 
-final class CreateTaskCommand
+final readonly class CreateTaskCommand
 {
     public function __construct(
-        public readonly UUID $uuid,
-        public readonly string $name,
-        public readonly string $description,
+        public UUID $uuid,
+        public string $name,
+        public string $description,
     ) {
     }
 }
